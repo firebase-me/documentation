@@ -35,3 +35,16 @@ imageRef.getDownloadURL().then((url) => {
     console.log(`CDN URL: ${cdnUrl}`)
     // render the image in your application
 })
+```
+To confirm that your images are being served from Bunny CDN cache, you can check for `cdn-cache` header in the response. If it's value is `HIT`, that means the image was server from cache. 
+
+Do note that the URLs must have the `?token=` query parameter for the first time else Firebase will respond with a 403 error. 
+
+Congrats! Your images now load faster than before. 
+
+However, there's a drawback. Once the image is cached on edge, anyone will be able to access it without the `?token=` parameter which defeats the purpose of having it and the security rules. Even though security rules just prevent random users from fetching the download URLs and not accessing the images if authorized users shared it with others, this may not be ideal in some cases. 
+
+One way around would be to use those tokens ([UUID](https://www.npmjs.com/package/uuid)) as the image name (e.g. `img_9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d.png`) but you cannot revoke these unless you reupload the image (to rename the image with new token). Bunny CDN also offers [token authentication](https://support.bunny.net/hc/en-us/articles/360016055099) which are technically signed URLs (but with CDN) if you really need to keep images private. 
+
+#firebase 
+
